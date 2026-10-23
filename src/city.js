@@ -141,6 +141,11 @@ export function mountCity(parent, {getSettings, onSelect}) {
   meters.appendChild(yawGroup)
   parent.appendChild(meters)
 
+  const markerTint = document.createElement("a-plane")
+  markerTint.setAttribute("material", "shader: flat; color: #c23b22; transparent: true; opacity: 0.2; side: double; depthWrite: false")
+  markerTint.setAttribute("visible", "false")
+  parent.appendChild(markerTint)
+
   const guides = document.createElement("a-entity")
   guides.id = "city-guides"
   yawGroup.appendChild(guides)
@@ -259,9 +264,15 @@ export function mountCity(parent, {getSettings, onSelect}) {
 
   return {
     apply,
-    setImageScale(scaledWidth) {
+    setImageScale(scaledWidth, scaledHeight) {
       if (!scaledWidth) return
       imageWidth = scaledWidth
+      if (scaledHeight) {
+        markerTint.setAttribute("width", scaledWidth)
+        markerTint.setAttribute("height", scaledHeight)
+        markerTint.setAttribute("position", "0 0 0.001")
+        markerTint.setAttribute("visible", "true")
+      }
       applyScale()
     },
   }

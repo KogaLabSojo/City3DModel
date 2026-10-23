@@ -178,8 +178,9 @@ function clamp(value, min, max) {
 function cameraEl() {
   const camera = document.createElement("a-camera")
   camera.setAttribute("position", desk ? "0 0 0.95" : "0 0 0")
-  camera.setAttribute("look-controls", "magicWindowTrackingEnabled: false")
-  if (desk) camera.setAttribute("camera", "fov: 55")
+  camera.setAttribute("look-controls", "enabled: false")
+  camera.setAttribute("wasd-controls", "enabled: false")
+  camera.setAttribute("camera", desk ? "fov: 55; near: 0.01; far: 10" : "near: 0.01; far: 1000")
   camera.setAttribute("cursor", "fuse: false; rayOrigin: mouse")
   camera.setAttribute("raycaster", "objects: .pin-hit")
   return camera
@@ -188,17 +189,18 @@ function cameraEl() {
 function mountScene() {
   const scene = document.createElement("a-scene")
   scene.setAttribute("embedded", "")
-  scene.setAttribute("renderer", "colorManagement: true; antialias: true")
   scene.setAttribute("vr-mode-ui", "enabled: false")
   scene.setAttribute("device-orientation-permission-ui", "enabled: false")
 
   if (desk) {
+    scene.setAttribute("renderer", "colorManagement: true; antialias: true")
     scene.setAttribute("background", "color: #d5dccb")
     const light = document.createElement("a-light")
     light.setAttribute("type", "ambient")
     light.setAttribute("intensity", "1")
     scene.appendChild(light)
   } else {
+    scene.setAttribute("renderer", "colorManagement: true; antialias: true; alpha: true")
     scene.setAttribute("xrweb", "disableWorldTracking: true")
     scene.setAttribute("landing-page", "")
     scene.setAttribute("xrextras-loading", "")
@@ -217,41 +219,67 @@ function mountTarget(scene) {
   scene.appendChild(target)
   city = mountCity(target, {getSettings: currentSettings, onSelect: selectPlace})
   target.addEventListener("xrextrasimagegeometry", (event) => {
-    city.setImageScale(event.detail.scaledWidth)
+    city.setImageScale(event.detail.scaledWidth, event.detail.scaledHeight)
   })
   target.addEventListener("xrextrasfound", () => {
-    setStatus("マーカーに追従しています")
+    setStatus("市役所のマーカーに追従しています")
     statusEl.classList.add("is-live")
   })
   target.addEventListener("xrextraslost", () => {
     setStatus("市役所屋上のマーカーを画面の中央に映してください")
     statusEl.classList.remove("is-live")
   })
+  scene.addEventListener("xrimagescanning", () => {
+    setStatus("市役所屋上のマーカーを画面の中央に映してください")
+  })
+  scene.addEventListener("xrimagefound", (event) => {
+    const name = event.detail?.name
+    if (name && name !== TARGET_NAME) {
+      setStatus(`認識した画像は ${name} です。市役所のマーカーではありません`)
+      statusEl.classList.remove("is-live")
+    }
+  })
 }
 
 const pageBase = new URL(".", document.baseURI)
 
-function assetCandidates(path) {
+function assetUrl(path) {
   const clean = String(path).replace(/^\//, "")
-  return [clean, `public/${clean}`].map((candidate) => new URL(candidate, pageBase).href)
+  const file = clean.includes("/") ? clean : `image-targets/${clean}`
+  // Vite は public をサイトルートに出す。GitHub Pages がリポジトリ直下を配信しているときは public/ 配下にある。
+  const prefix = typeof import.meta.env === "undefined" ? "public/" : ""
+  return new URL(`${prefix}${file}`, pageBase).href
 }
 
 async function resolveAsset(path) {
-  for (const url of assetCandidates(path)) {
-    const response = await fetch(url)
-    if (response.ok) return {url, response}
-  }
-  return null
+  const url = assetUrl(path)
+  const response = await fetch(url)
+  if (!response.ok) return null
+  return {url, response}
 }
 
 async function loadTarget() {
   const found = await resolveAsset("image-targets/arco-194.json")
   if (!found) {
-    throw new Error("イメージターゲットが見つかりません")
+    throw new Error(`イメージターゲットを読み込めませんでした (${assetUrl("image-targets/arco-194.json")})`)
   }
   const target = await found.response.json()
-  const luminance = await resolveAsset(target.imagePath || "image-targets/arco-194_luminance.png")
-  if (luminance) target.imagePath = luminance.url
+  const files = [target.imagePath, ...Object.values(target.resources || {})].filter(Boolean)
+  const resolved = new Map()
+  for (const file of files) {
+    if (resolved.has(file)) continue
+    const asset = await resolveAsset(file)
+    if (asset) resolved.set(file, asset.url)
+  }
+  if (target.imagePath && resolved.has(target.imagePath)) target.imagePath = resolved.get(target.imagePath)
+  if (target.resources) {
+    for (const [key, file] of Object.entries(target.resources)) {
+      if (resolved.has(file)) target.resources[key] = resolved.get(file)
+    }
+  }
+  if (!target.imagePath?.startsWith("http")) {
+    throw new Error("マーカー画像の場所を解決できませんでした")
+  }
   return target
 }
 

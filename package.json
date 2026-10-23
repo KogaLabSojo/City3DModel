@@ -1,0 +1,18 @@
+{
+  "name": "kumamoto-city-model-ar",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:phone": "node scripts/dev-phone.mjs",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "marker": "node scripts/build-target.mjs",
+    "test": "node --test scripts/geo.test.js"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "vite": "^8.3.5"
+  }
+}

@@ -1,0 +1,213 @@
+:root {
+  color: #1c1915;
+  background: #1a2118;
+  font-family: "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", Meiryo, sans-serif;
+  --paper: rgba(252, 248, 242, 0.94);
+  --ink: #1c1915;
+  --indigo: #24344d;
+  --line: rgba(36, 52, 77, 0.16);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+button, input { font: inherit; color: inherit; }
+
+#stage {
+  position: fixed;
+  inset: 0;
+}
+
+.topbar, .status, .sheet, dialog {
+  position: relative;
+  z-index: 4;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 10px;
+  color: #f7f3ea;
+  background: linear-gradient(#1a2118, rgba(26, 33, 24, 0));
+  pointer-events: none;
+}
+
+.topbar h1, .brand { margin: 0; }
+
+.brand {
+  letter-spacing: 0.14em;
+  font-size: 11px;
+}
+
+.topbar h1 {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.topbar button, .sheet, dialog {
+  pointer-events: auto;
+}
+
+.topbar button, dialog button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--paper);
+  color: var(--indigo);
+}
+
+.status {
+  position: fixed;
+  top: calc(74px + env(safe-area-inset-top));
+  left: 16px;
+  right: 16px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(28, 25, 21, 0.78);
+  color: #f7f3ea;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.status.is-live { background: rgba(29, 122, 69, 0.9); }
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 42vh;
+  overflow: auto;
+  padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 18px 18px 0 0;
+  background: var(--paper);
+  box-shadow: 0 -10px 30px rgba(28, 25, 21, 0.18);
+}
+
+.filters, .places { display: flex; gap: 8px; }
+
+.filters {
+  position: sticky;
+  top: 0;
+  padding-bottom: 8px;
+  background: var(--paper);
+}
+
+.chip, .place {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.chip {
+  border-radius: 999px;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.chip.is-on {
+  background: var(--chip);
+  border-color: var(--chip);
+  color: white;
+}
+
+.places { flex-direction: column; }
+
+.place {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 8px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.place.is-selected { background: rgba(36, 52, 77, 0.08); }
+
+.place strong, .place small { display: block; }
+.place small { color: #5c564c; margin-top: 2px; }
+
+.swatch {
+  width: 10px;
+  height: 36px;
+  border-radius: 999px;
+  flex: none;
+}
+
+.detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.detail h2, .detail p { margin: 0 0 6px; }
+.detail h2 {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 24px;
+}
+.kicker, .reading, .meta { color: #5c564c; font-size: 13px; }
+.reading { letter-spacing: 0.04em; }
+
+dialog {
+  width: min(440px, calc(100vw - 24px));
+  border: 0;
+  border-radius: 18px;
+  padding: 0;
+  color: var(--ink);
+  background: #f7f3ea;
+}
+
+dialog::backdrop { background: rgba(26, 33, 24, 0.45); }
+
+dialog form { padding: 16px; }
+dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+dialog h2 { margin: 0; font-size: 20px; }
+dialog label { display: block; margin-top: 14px; font-weight: 700; }
+dialog label span, dialog input[type="range"] { display: block; margin-top: 6px; font-weight: 500; }
+dialog input[type="number"] {
+  width: 6em;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+.hint { margin: 6px 0 0; color: #5c564c; font-size: 13px; line-height: 1.5; }
+.check { font-weight: 500; }
+dialog figure { margin: 16px 0 0; display: flex; gap: 12px; align-items: center; }
+dialog img {
+  width: 92px;
+  height: auto;
+  background: white;
+  border: 1px solid var(--line);
+}
+dialog figcaption { margin: 0; color: #5c564c; font-size: 13px; line-height: 1.5; }
+
+@media (min-width: 860px) {
+  .sheet {
+    left: auto;
+    width: min(380px, 36vw);
+    top: 16px;
+    bottom: 16px;
+    max-height: none;
+    border-radius: 18px;
+  }
+}

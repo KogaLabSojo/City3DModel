@@ -1,0 +1,10 @@
+{
+  "dictionary": "DICT_4X4_50",
+  "id": 17,
+  "borderBits": 1,
+  "quietZoneModules": 1,
+  "imageWidthPx": 1200,
+  "imageHeightPx": 1600,
+  "markerWidthRatio": 1.0,
+  "note": "tracked image width equals the square marker including the white quiet zone"
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#24344d">
+    <title>熊本 通町筋 模型AR</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <script src="https://cdn.8thwall.com/web/aframe/8frame-1.5.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@1/dist/xrextras.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@8thwall/landing-page@1/dist/landing-page.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@8thwall/engine-binary@1/dist/xr.js" async crossorigin="anonymous" data-preload-chunks="slam"></script>
+  </head>
+  <body>
+    <div id="stage"></div>
+
+    <header class="topbar">
+      <div>
+        <p class="brand">熊本市 1/1000</p>
+        <h1>通町筋</h1>
+      </div>
+      <button id="open-settings" type="button">調整</button>
+    </header>
+
+    <p id="status" class="status">読み込み中</p>
+
+    <section class="sheet" aria-label="市内の地点">
+      <div id="filters" class="filters"></div>
+      <div id="place-list" class="places"></div>
+      <article id="detail" class="detail"></article>
+    </section>
+
+    <dialog id="settings">
+      <form method="dialog">
+        <header>
+          <h2>模型への合わせ</h2>
+          <button id="close-settings" type="submit" value="close">閉じる</button>
+        </header>
+        <label>
+          マーカーの一辺
+          <span><input id="marker-mm" type="number" min="20" max="300" step="1"> mm</span>
+        </label>
+        <p class="hint">白い静穏域を含んだ正方形の、印刷した実寸です。初期値は 80mm です。</p>
+        <label>
+          マーカー上辺の方位 <strong id="yaw-value">0°</strong>
+          <input id="yaw" type="range" min="-180" max="180" step="1">
+        </label>
+        <p class="hint">0° でマーカーの上辺が北です。画面の「北」が模型の北と重なるまで回します。東は 90° です。</p>
+        <label>
+          市役所屋上から地面までの模型高さ
+          <span><input id="roof-mm" type="number" min="0" max="200" step="1"> mm</span>
+        </label>
+        <p class="hint">ピンを路上の高さまで下げます。屋上と同じ面に出すときは 0 のままにします。</p>
+        <label class="check"><input id="show-rings" type="checkbox"> 100m・300m・500m の環</label>
+        <label class="check"><input id="show-guides" type="checkbox"> マーカーの外枠</label>
+        <figure>
+          <img src="/image-targets/arco-17-source.png" alt="追跡に使う ArUco マーカー17番" width="180" height="240">
+          <figcaption>DICT_4X4_50 の 17 番。模型のシールと模様が同じか見てください。上辺が画面の上です。</figcaption>
+        </figure>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

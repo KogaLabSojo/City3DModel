@@ -203,6 +203,14 @@ export function mountCity(parent, {getSettings, onSelect}) {
     }
     guides.object3D.visible = settings.showGuides || settings.showRings
     if (settings.showGuides) {
+      const ground = new THREE.Mesh(
+        new THREE.CircleGeometry(0.55, 64),
+        new THREE.MeshBasicMaterial({color: 0xe7efe0, side: THREE.DoubleSide}),
+      )
+      ground.position.z = -0.002
+      guides.object3D.add(ground)
+    }
+    if (settings.showGuides) {
       const frame = lineLoop(width, height, 0xc23b22)
       frame.position.z = 0.001
       const square = lineLoop(width, width, 0x24344d)

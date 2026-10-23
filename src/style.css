@@ -23,6 +23,14 @@ button, input { font: inherit; color: inherit; }
   inset: 0;
 }
 
+#stage .a-scene,
+#stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .topbar, .status, .sheet, dialog {
   position: relative;
   z-index: 4;
@@ -90,12 +98,32 @@ button, input { font: inherit; color: inherit; }
   left: 0;
   right: 0;
   bottom: 0;
-  max-height: 42vh;
+  max-height: 46vh;
   overflow: auto;
   padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
   border-radius: 18px 18px 0 0;
   background: var(--paper);
   box-shadow: 0 -10px 30px rgba(28, 25, 21, 0.18);
+}
+
+#toggle-list {
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-weight: 700;
+  color: var(--indigo);
+}
+
+.sheet.is-collapsed {
+  max-height: none;
+}
+
+.sheet.is-collapsed .filters,
+.sheet.is-collapsed .places {
+  display: none;
 }
 
 .filters, .places { display: flex; gap: 8px; }
@@ -202,6 +230,10 @@ dialog img {
 dialog figcaption { margin: 0; color: #5c564c; font-size: 13px; line-height: 1.5; }
 
 @media (min-width: 860px) {
+  #stage,
+  .topbar,
+  .status { right: min(396px, calc(36vw + 16px)); }
+
   .sheet {
     left: auto;
     width: min(380px, 36vw);
@@ -210,4 +242,9 @@ dialog figcaption { margin: 0; color: #5c564c; font-size: 13px; line-height: 1.5
     max-height: none;
     border-radius: 18px;
   }
+
+  #toggle-list { display: none; }
+
+  .sheet.is-collapsed .filters { display: flex; }
+  .sheet.is-collapsed .places { display: flex; }
 }

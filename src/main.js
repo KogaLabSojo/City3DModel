@@ -161,6 +161,13 @@ function bindSettings() {
   document.querySelector("#close-settings").addEventListener("click", () => {
     settingsEl.close()
   })
+  const sheet = document.querySelector(".sheet")
+  const toggle = document.querySelector("#toggle-list")
+  toggle.addEventListener("click", () => {
+    const collapsed = sheet.classList.toggle("is-collapsed")
+    toggle.setAttribute("aria-expanded", String(!collapsed))
+    toggle.textContent = collapsed ? "地点一覧" : "一覧を閉じる"
+  })
 }
 
 function clamp(value, min, max) {
@@ -170,7 +177,7 @@ function clamp(value, min, max) {
 
 function cameraEl() {
   const camera = document.createElement("a-camera")
-  camera.setAttribute("position", desk ? "0 0 0.62" : "0 0 0")
+  camera.setAttribute("position", desk ? "0 0 0.95" : "0 0 0")
   camera.setAttribute("look-controls", "magicWindowTrackingEnabled: false")
   if (desk) camera.setAttribute("camera", "fov: 55")
   camera.setAttribute("cursor", "fuse: false; rayOrigin: mouse")
@@ -180,6 +187,7 @@ function cameraEl() {
 
 function mountScene() {
   const scene = document.createElement("a-scene")
+  scene.setAttribute("embedded", "")
   scene.setAttribute("renderer", "colorManagement: true; antialias: true")
   scene.setAttribute("vr-mode-ui", "enabled: false")
   scene.setAttribute("device-orientation-permission-ui", "enabled: false")

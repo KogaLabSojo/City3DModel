@@ -13,7 +13,6 @@ export const CATEGORIES = {
   shopping: {label: "商業", color: "#b5812f"},
   history: {label: "歴史", color: "#c23b22"},
   culture: {label: "文化", color: "#5c4d86"},
-  nature: {label: "みどり", color: "#3d7a62"},
 }
 
 export const PLACES = [

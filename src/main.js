@@ -3,7 +3,7 @@ import {CATEGORIES, PLACES} from "./places.js"
 import {formatDistance} from "./geo.js"
 
 const STORAGE_KEY = "kumamoto-model-ar"
-const TARGET_NAME = "arco-17"
+const TARGET_NAME = "arco-194"
 
 const desk = new URLSearchParams(location.search).has("desk")
 
@@ -245,19 +245,19 @@ async function resolveAsset(path) {
 }
 
 async function loadTarget() {
-  const found = await resolveAsset("image-targets/arco-17.json")
+  const found = await resolveAsset("image-targets/arco-194.json")
   if (!found) {
     throw new Error("イメージターゲットが見つかりません")
   }
   const target = await found.response.json()
-  const luminance = await resolveAsset(target.imagePath || "image-targets/arco-17_luminance.png")
+  const luminance = await resolveAsset(target.imagePath || "image-targets/arco-194_luminance.png")
   if (luminance) target.imagePath = luminance.url
   return target
 }
 
 async function showMarkerPreview() {
   const image = document.querySelector("#marker-preview")
-  const found = await resolveAsset("image-targets/arco-17-source.png")
+  const found = await resolveAsset("image-targets/arco-194-source.png")
   if (found && image) image.src = found.url
 }
 

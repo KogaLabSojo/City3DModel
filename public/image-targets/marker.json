@@ -1,6 +1,7 @@
 {
-  "dictionary": "DICT_4X4_50",
-  "id": 17,
+  "dictionary": "DICT_4X4_250",
+  "id": 194,
+  "rotate": 180,
   "borderBits": 1,
   "quietZoneModules": 1,
   "imageWidthPx": 1200,

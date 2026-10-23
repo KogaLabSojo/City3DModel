@@ -16,7 +16,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "public" / "image-targets"
-TARGET_NAME = "arco-17"
+TARGET_NAME = "arco-194"
 
 
 def dictionary_bits(dictionary: cv2.aruco.Dictionary, name: str) -> int:
@@ -29,7 +29,7 @@ def dictionary_bits(dictionary: cv2.aruco.Dictionary, name: str) -> int:
     raise SystemExit(f"マーカーのマス数を判定できません: {name}")
 
 
-def render_portrait(dictionary_name: str, marker_id: int) -> tuple[np.ndarray, dict]:
+def render_portrait(dictionary_name: str, marker_id: int, rotate: int) -> tuple[np.ndarray, dict]:
     if not hasattr(cv2.aruco, dictionary_name):
         raise SystemExit(f"未知の辞書です: {dictionary_name}")
 
@@ -56,10 +56,13 @@ def render_portrait(dictionary_name: str, marker_id: int) -> tuple[np.ndarray, d
     top = (height - square) // 2 + quiet_px
     left = quiet_px
     canvas[top : top + marker_px, left : left + marker_px] = marker
+    if rotate == 180:
+        canvas = cv2.rotate(canvas, cv2.ROTATE_180)
 
     info = {
         "dictionary": dictionary_name,
         "id": marker_id,
+        "rotate": rotate,
         "borderBits": border_bits,
         "quietZoneModules": quiet_modules,
         "imageWidthPx": square,
@@ -72,14 +75,15 @@ def render_portrait(dictionary_name: str, marker_id: int) -> tuple[np.ndarray, d
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dict", default="DICT_4X4_50", dest="dictionary")
-    parser.add_argument("--id", type=int, default=17)
+    parser.add_argument("--dict", default="DICT_4X4_250", dest="dictionary")
+    parser.add_argument("--id", type=int, default=194)
+    parser.add_argument("--rotate", type=int, choices=(0, 180), default=180)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
-    image, info = render_portrait(args.dictionary, args.id)
+    image, info = render_portrait(args.dictionary, args.id, args.rotate)
     args.out.mkdir(parents=True, exist_ok=True)
-    image_path = args.out / "arco-17-source.png"
+    image_path = args.out / f"{TARGET_NAME}-source.png"
     info_path = args.out / "marker.json"
     cv2.imwrite(str(image_path), image)
     info_path.write_text(json.dumps(info, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

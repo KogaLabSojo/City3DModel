@@ -3,7 +3,7 @@ import path from "node:path"
 import {fileURLToPath} from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const image = path.join(root, "public", "image-targets", "arco-17-source.png")
+const image = path.join(root, "public", "image-targets", "arco-194-source.png")
 const outDir = path.join(root, "public", "image-targets")
 
 function run(command, args, {input, env} = {}) {
@@ -23,8 +23,8 @@ function run(command, args, {input, env} = {}) {
   })
 }
 
-await run("python", ["scripts/generate_marker.py"])
+await run("python", ["scripts/generate_marker.py", "--dict", "DICT_4X4_250", "--id", "194", "--rotate", "180"])
 await run("npx", ["--yes", "@8thwall/image-target-cli@latest"], {
   env: {OVERWRITE_FILES: "true"},
-  input: `${image}\n\n\n${outDir}\narco-17\n`,
+  input: `${image}\n\n\n${outDir}\narco-194\n`,
 })

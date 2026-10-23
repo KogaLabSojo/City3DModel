@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#24344d">
     <title>熊本 通町筋 模型AR</title>
-    <link rel="stylesheet" href="/src/style.css">
+    <link rel="stylesheet" href="./src/style.css">
     <script src="https://cdn.8thwall.com/web/aframe/8frame-1.5.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@1/dist/xrextras.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@8thwall/landing-page@1/dist/landing-page.js" crossorigin="anonymous"></script>
@@ -56,12 +56,12 @@
         <label class="check"><input id="show-rings" type="checkbox"> 100m・300m・500m の環</label>
         <label class="check"><input id="show-guides" type="checkbox"> マーカーの外枠</label>
         <figure>
-          <img src="/image-targets/arco-17-source.png" alt="追跡に使う ArUco マーカー17番" width="180" height="240">
+          <img id="marker-preview" alt="追跡に使う ArUco マーカー17番" width="180" height="240">
           <figcaption>DICT_4X4_50 の 17 番。模型のシールと模様が同じか見てください。上辺が画面の上です。</figcaption>
         </figure>
       </form>
     </dialog>
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

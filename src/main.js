@@ -229,12 +229,36 @@ function mountTarget(scene) {
   })
 }
 
+const pageBase = new URL(".", document.baseURI)
+
+function assetCandidates(path) {
+  const clean = String(path).replace(/^\//, "")
+  return [clean, `public/${clean}`].map((candidate) => new URL(candidate, pageBase).href)
+}
+
+async function resolveAsset(path) {
+  for (const url of assetCandidates(path)) {
+    const response = await fetch(url)
+    if (response.ok) return {url, response}
+  }
+  return null
+}
+
 async function loadTarget() {
-  const response = await fetch("/image-targets/arco-17.json")
-  if (!response.ok) {
+  const found = await resolveAsset("image-targets/arco-17.json")
+  if (!found) {
     throw new Error("イメージターゲットが見つかりません")
   }
-  return response.json()
+  const target = await found.response.json()
+  const luminance = await resolveAsset(target.imagePath || "image-targets/arco-17_luminance.png")
+  if (luminance) target.imagePath = luminance.url
+  return target
+}
+
+async function showMarkerPreview() {
+  const image = document.querySelector("#marker-preview")
+  const found = await resolveAsset("image-targets/arco-17-source.png")
+  if (found && image) image.src = found.url
 }
 
 function waitForEngine() {
@@ -249,6 +273,7 @@ function waitForEngine() {
 }
 
 async function boot() {
+  showMarkerPreview()
   renderFilters()
   renderList()
   renderDetail()
